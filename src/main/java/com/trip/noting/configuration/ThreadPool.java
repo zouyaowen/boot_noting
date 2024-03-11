@@ -11,10 +11,10 @@ import java.util.concurrent.*;
 @EnableAsync
 public class ThreadPool {
 
-    @Bean
-    public ThreadPoolExecutor threadPool() {
-        return new ThreadPoolExecutor(2, 5, 5L, TimeUnit.MINUTES, new ArrayBlockingQueue<>(500), Executors.defaultThreadFactory(), new ThreadPoolExecutor.CallerRunsPolicy());
-    }
+    // @Bean
+    // public Executor threadPool() {
+    //     return new ThreadPoolExecutor(2, 5, 5L, TimeUnit.MINUTES, new ArrayBlockingQueue<>(500), Executors.defaultThreadFactory(), new ThreadPoolExecutor.CallerRunsPolicy());
+    // }
 
     /**
      * 下面的配置是配置Springboot的@Async注解所用的线程池
