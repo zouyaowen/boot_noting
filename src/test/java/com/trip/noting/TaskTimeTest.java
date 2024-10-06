@@ -1,7 +1,10 @@
 package com.trip.noting;
 
+import lombok.Getter;
+import org.junit.Test;
 import org.springframework.util.StopWatch;
 
+import java.util.Date;
 import java.util.concurrent.*;
 
 public class TaskTimeTest {
@@ -67,5 +70,28 @@ public class TaskTimeTest {
 
     public static void compute() {
 
+    }
+
+    @Getter
+    public enum StatusEnum {
+        LOCK(1), CONFIRM(2);
+        private final int status;
+
+        StatusEnum(int status) {
+            this.status = status;
+        }
+    }
+
+    @Test
+    public void testTime() {
+        Date date = new Date(new Date().getTime() - 30 * 60 * 1000);
+        System.out.println(date);
+    }
+
+    private StatusEnum getStatus(int status) {
+        if (status == 1) {
+            return StatusEnum.LOCK;
+        }
+        return null;
     }
 }

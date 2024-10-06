@@ -2,16 +2,24 @@ package com.trip.noting.controller;
 
 import com.alibaba.fastjson2.JSON;
 import com.trip.noting.configuration.Hello;
+import org.springframework.ui.Model;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.startup.UserDatabase;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Calendar;
+import java.util.Date;
 
 @RestController
 @Slf4j
@@ -30,36 +38,55 @@ public class HelloController {
     // 使用
     @Autowired
     private Hello hello;
-
     @Autowired
     private ApplicationContext applicationContext;
-
     @Autowired
     private BeanFactory factory;
-
     @Autowired
     private ObjectFactory<Hello> helloBeanFactory;
+    @Autowired
+    private RestTemplate restTemplate;
 
     public static class User {
         public String name;
         public Integer age;
         public Integer gender;
+        public String date;
+    }
 
+    public static class UserRec {
+        public String name;
+        public Integer age;
+        public Integer gender;
+        public Calendar date;
     }
 
     @GetMapping("/hello")
     public String hello(User user) {
-        // Hello bean = applicationContext.getBean(Hello.class);
-        // Hello bean = getHello();
-        // Hello bean = factory.getBean(Hello.class);
-        Hello bean = helloBeanFactory.getObject();
-        System.out.println(bean);
-        System.out.println(JSON.toJSONString(bean));
-        return "hello";
+        System.out.println(JSON.toJSONString(user));
+        String hello1 = hello.hello();
+        System.out.println(hello1);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<User> httpEntity = new HttpEntity<>(new User() {{
+            this.name = "123";
+            this.age = 33;
+        }}, headers);
+        ResponseEntity<UserRec> userResponseEntity = restTemplate.postForEntity("http://127.0.0.1:8088/world", httpEntity, UserRec.class);
+        System.out.println(JSON.toJSONString(userResponseEntity));
+        return hello1;
     }
 
-    @Lookup
-    public Hello getHello() {
-        return null;
+    @PostMapping("/world")
+    public User world(@RequestBody User user) {
+        System.out.println(JSON.toJSONString(user));
+        System.out.println("===============");
+        return new User() {{
+            this.name = "resp";
+            this.age = 22;
+            this.date = "/Date(1716962646008+0800)/";
+        }};
     }
+
+
 }

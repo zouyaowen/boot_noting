@@ -1,12 +1,18 @@
 package com.trip.noting.configuration;
 
-import lombok.Getter;
-import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-@Setter
-@Getter
+@Component
 public class Hello {
+
     private String helloName;
+    @Autowired
     private World world;
+
+    public String hello() {
+        System.out.println("Hello.hello()");
+        return "helloRes";
+    }
 
 }

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -19,13 +20,17 @@ public class BeanConfig {
     }
 
     @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public Hello hello(World world) {
-        Hello hello = new Hello();
-        hello.setWorld(world);
-        System.out.println(JSON.toJSONString(hello));
-        return hello;
+    RestTemplate restTemplate() {
+        return new RestTemplate();
     }
+
+    // @Bean
+    // public Hello hello(World world) {
+    //     Hello hello = new Hello();
+    //     hello.setWorld(world);
+    //     System.out.println(JSON.toJSONString(hello));
+    //     return hello;
+    // }
 
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
