@@ -19,7 +19,7 @@ public class ThreadPool {
      * 下面的配置是配置Springboot的@Async注解所用的线程池
      */
     @Bean
-    public Executor taskExecutor() {
+    public ThreadPoolTaskExecutor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         // 设置线程池核心容量
         executor.setCorePoolSize(4);
@@ -30,7 +30,7 @@ public class ThreadPool {
         // 设置线程超时时间
         executor.setKeepAliveSeconds(60);
         // 设置线程名称前缀
-        executor.setThreadNamePrefix("asyncPool-");
+        executor.setThreadNamePrefix("asyncPool--");
         // 设置任务丢弃后的处理策略,当poolSize已达到maxPoolSize，如何处理新任务（是拒绝还是交由其它线程处理）,CallerRunsPolicy：不在新线程中执行任务，而是由调用者所在的线程来执
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         executor.initialize();

@@ -1,20 +1,16 @@
 package com.trip.noting.controller;
 
-import com.alibaba.excel.annotation.ExcelProperty;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import cn.idev.excel.annotation.ExcelProperty;
+import lombok.Data;
 
 import java.util.Date;
 
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 public class DownloadData {
-    @ExcelProperty("字符串标题")
-    private String string;
-    @ExcelProperty("日期标题")
-    private Date date;
-    @ExcelProperty("数字标题")
-    private Double doubleData;
+    @ExcelProperty("名称")
+    private String name;
+    @ExcelProperty("时间")
+    private Date time;
+    @ExcelProperty("数字")
+    private Double number;
 }

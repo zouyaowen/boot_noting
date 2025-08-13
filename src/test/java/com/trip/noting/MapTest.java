@@ -5,26 +5,49 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.trip.noting.controller.HelloController;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.Test;
 import org.springframework.util.StopWatch;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 
 public class MapTest {
 
+    public static void main(String[] args) {
+        List<String> locales = new ArrayList<>();
+        locales.add("zh-CN");
+        locales.add("en-US");
+        for (String locale : locales) {
+            for (int i = 0; i < 20; i++) {
+                new Thread(() -> {
+                    System.out.println(locale);
+                }).start();
+            }
+        }
+
+    }
+
+
     @Data
     public static class User {
         private long id;
         private String name;
+        private Integer age;
+        private List<String> friends;
     }
-
 
     @Test
     public void test() {
@@ -505,4 +528,179 @@ public class MapTest {
         tripMessageConfig.sentType = 1;
         System.out.println(JSON.toJSONString(tripMessageConfig));
     }
+
+    @Test
+    public void testTime() {
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        // 毫秒数据
+        System.out.println(calendar.getTime().getTime());
+        // new Timestamp(Calendar.getInstance().getTimeInMillis());
+        Timestamp timestamp = new Timestamp(date.getTime());
+        // 毫秒数据
+        System.out.println(timestamp.getTime());
+
+    }
+
+    @Test
+    public void testSet() {
+        String lockValue = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+        System.out.println(lockValue);
+    }
+
+    @Test
+    public void testSunList() {
+        List<Long> idList = Collections.singletonList(3L);
+        while (!idList.isEmpty()) {
+            List<Long> a = new ArrayList<>();
+            if (idList.size() > 50) {
+                a = idList.subList(0, 50);
+            } else {
+                a = idList.subList(0, idList.size());
+            }
+            idList.removeAll(a);
+        }
+    }
+
+    @Test
+    public void testHeap() {
+        String str = "16865," + "94291," + "47555," + "38067," + "36218," + "16831," + "107696," + "4222," + "62189," + "39647," + "80403," + "76917," + "39537," + "8320," + "56008," + "38313," + "56015," + "53609," + "3807," + "45727," + "51364," + "43218," + "39934," + "42615," + "43172," + "62189";
+        String[] split = StringUtils.split(str, "");
+        List<String> list1 = new ArrayList<>();
+        for (String string : split) {
+            list1.add(string);
+        }
+        String str2 = "62189,8320,47555,56008,56015,94291,80403,43218,39647,3807,45727,16865,51364,43172,38313,53609,107696,39537,38067,76917,42615,36218,4222,39934,16831";
+        String[] split2 = StringUtils.split(str, "");
+        List<String> list2 = new ArrayList<>();
+        for (String string : split2) {
+            list2.add(string);
+        }
+        list1.retainAll(list2);
+        System.out.println(JSON.toJSONString(list1));
+        list2.retainAll(list1);
+        System.out.println(JSON.toJSONString(list2));
+
+    }
+
+    @Test
+    public void equalTime() {
+        LocalDateTime dateTime1 = LocalDateTime.parse("2024-01-02 00:00:01", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime dateTime2 = LocalDateTime.parse("2024-01-02 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        System.out.println(dateTime1.equals(dateTime2));
+    }
+
+    @Test
+    public void testToMap() throws InterruptedException {
+        List<User> users = new ArrayList<>();
+        users.add(new User() {{
+            this.setId(1);
+            this.setFriends(new ArrayList<String>() {{
+                add("zou");
+                add("wen");
+            }});
+        }});
+        users.add(new User() {{
+            this.setId(1);
+            this.setFriends(new ArrayList<String>() {{
+                add("zou1");
+                add("wen1");
+            }});
+        }});
+        System.out.println(JSON.toJSONString(users));
+        List<String> stringList = users.stream().flatMap(x -> x.friends.stream()).collect(Collectors.toList());
+        System.out.println(JSON.toJSONString(stringList));
+    }
+
+    private int addOne(Integer v) {
+        return v + 3;
+    }
+
+
+    @Test
+    public void testListRemove() throws InterruptedException {
+        List<User> users = new ArrayList<>();
+        users.add(new User() {{
+            this.setId(1);
+            this.setFriends(new ArrayList<String>() {{
+                add("zou1");
+                add("wen1");
+            }});
+        }});
+        users.add(new User() {{
+            this.setId(2);
+            this.setFriends(new ArrayList<String>() {{
+                add("zou2");
+                add("wen2");
+            }});
+        }});
+        users.add(new User() {{
+            this.setId(3);
+            this.setFriends(new ArrayList<String>() {{
+                add("zou3");
+                add("wen3");
+            }});
+        }});
+        System.out.println(JSON.toJSONString(users));
+
+        for (User user : users) {
+
+        }
+    }
+
+    @Test
+    public void listSort() {
+        List<User> users = new ArrayList<>();
+        users.add(new User() {{
+            this.setId(2);
+            this.setName("name2");
+        }});
+        users.add(new User() {{
+            this.setId(3);
+            this.setName("name31");
+        }});
+        users.add(new User() {{
+            this.setId(3);
+            this.setName("name32");
+        }});
+        users.add(new User() {{
+            this.setId(4);
+            this.setName("name4");
+        }});
+        System.out.println(JSON.toJSONString(users));
+        users.sort((a, b) -> {
+            if (a.id == 3 && b.id != 3) {
+                return -1;
+            } else if (a.id != 3 && b.id == 3) {
+                return 1;
+            }
+            return 0;
+        });
+        System.out.println(JSON.toJSONString(users));
+
+    }
+
+    @Test
+    public void testThread() {
+        String str = "啊啊啊啊1啊啊";
+        System.out.println(str.length());
+    }
+
+    @Test
+    public void testBreak() {
+        labelB:
+        for (int i = 0; i < 3; i++) {
+            System.out.println("i:" + i);
+            for (int j = 0; j < 3; j++) {
+                System.out.println("j:" + j);
+                if (j == 1) {
+                    break labelB;
+                }
+            }
+        }
+        System.out.println("over!");
+    }
+
+
 }
